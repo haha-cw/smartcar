@@ -1,0 +1,11 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\buleteeth.obj",
+".\Objects\move.obj",
+".\Objects\delay.obj",
+".\Objects\Obstacle avoidance.obj",
+".\Objects\supersonic.obj",
+".\Objects\key_obstacle.obj",
+".\Objects\follow line.obj" 
+TO ".\Objects\smartcar" 
+PRINT(".\Listings\smartcar.m51") RAMSIZE(256) 

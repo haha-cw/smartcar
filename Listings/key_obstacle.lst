@@ -1,0 +1,59 @@
+C51 COMPILER V9.59.0.0   KEY_OBSTACLE                                                      05/11/2020 19:43:19 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE KEY_OBSTACLE
+OBJECT MODULE PLACED IN .\Objects\key_obstacle.obj
+COMPILER INVOKED BY: D:\keil\C51\BIN\C51.EXE key_obstacle.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\key_obstacle.lst) OBJECT(.\Objects\key_obstacle.obj)
+
+line level    source
+
+   1          #include <STC89C5xRC.H>
+   2          #define uint unsigned int
+   3          
+   4          void Delay1ms(unsigned int k);
+   5          extern uint mode_flag;
+   6          sbit key=P3^3;
+   7          sbit spk=P2^5;
+   8          
+   9          void key_int()
+  10          {
+  11   1        EA=1;
+  12   1        EX1=1;
+  13   1        IT1=1;
+  14   1      }
+  15          
+  16          void beep(uint n)
+  17          {
+  18   1       while(n)
+  19   1       {
+  20   2         spk=0;Delay1ms(500);
+  21   2         spk=1;Delay1ms(500);
+  22   2        n--;
+  23   2       }
+  24   1      }
+  25          
+  26          void key_mode() interrupt 2
+  27          {
+  28   1        Delay1ms(10);
+  29   1        if(~key)
+  30   1        {
+  31   2           mode_flag++;
+  32   2          if(mode_flag==4) mode_flag=1;
+  33   2           beep(mode_flag);
+  34   2        }
+  35   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    140    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

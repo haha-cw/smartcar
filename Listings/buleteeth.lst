@@ -1,0 +1,84 @@
+C51 COMPILER V9.59.0.0   BULETEETH                                                         05/11/2020 19:43:19 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE BULETEETH
+OBJECT MODULE PLACED IN .\Objects\buleteeth.obj
+COMPILER INVOKED BY: D:\keil\C51\BIN\C51.EXE buleteeth.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\bu
+                    -leteeth.lst) OBJECT(.\Objects\buleteeth.obj)
+
+line level    source
+
+   1          #include <STC89C5xRC.H>
+   2          #define uchar unsigned char
+   3          #define uint unsigned int
+   4          uchar receive_data='0';
+   5          extern uint mode_flag;
+   6          void Timer0_Init();
+   7          void UartInit();
+   8          void Delay1ms(unsigned int k);
+   9          void back();
+  10          void stop();
+  11          void go();
+  12          void local_left();
+  13          void local_right();
+  14          
+  15          void UartInit()         //9600bps@11.0592MHz
+  16          {
+  17   1              EA=1;
+  18   1          ES=1;     //开总中断和串口中断，需要自己添加，软件没有生成
+  19   1          PCON &= 0x7F;               //波特率不倍速
+  20   1              SCON = 0x50;            //8位数据,可变波特率
+  21   1              AUXR &= 0xBF;           //定时器1时钟为Fosc/12,即12T
+  22   1              AUXR &= 0xFE;           //串口1选择定时器1为波特率发生器
+  23   1              TMOD &= 0x0F;           //清除定时器1模式位
+  24   1              TMOD |= 0x20;           //设定定时器1为8位自动重装方式
+  25   1              TL1 = 0xFD;             //设定定时初值
+  26   1              TH1 = 0xFD;             //设定定时器重装值
+  27   1              ET1 = 0;                //禁止定时器1中断
+  28   1              TR1 = 1;                //启动定时器1
+  29   1      }
+  30          
+  31          
+  32          void uart_inter() interrupt 4
+  33          {
+  34   1         EA=0;
+  35   1        if(RI)
+  36   1        {
+  37   2          RI=0;
+  38   2          receive_data=SBUF;
+  39   2        }
+  40   1        EA=1;
+  41   1      }
+  42          
+  43          void blueteeth_mode()
+  44          {
+  45   1          UartInit();
+  46   1          Timer0_Init();
+  47   1         while(mode_flag==1)
+  48   1         {
+  49   2          switch(receive_data)
+  50   2          {
+  51   3          case'1': go();break;
+  52   3          case'2': back();break;
+  53   3          case'3': local_left();break;
+  54   3          case'4': local_right();break;
+C51 COMPILER V9.59.0.0   BULETEETH                                                         05/11/2020 19:43:19 PAGE 2   
+
+  55   3          case'0': stop();break;
+  56   3          }
+  57   2         }
+  58   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    106    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
